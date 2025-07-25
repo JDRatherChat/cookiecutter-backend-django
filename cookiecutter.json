@@ -1,0 +1,18 @@
+{
+  "project_name": "My Django Project",
+  "project_slug": "my_django_project",
+  "author_name": "JD Gresse",
+  "email": "you@example.com",
+  "python_version": "3.11",
+  "use_docker": "yes",
+  "use_postgres": "yes",
+  "use_celery": "no",
+  "use_github_actions": "yes",
+  "license": [
+    "MIT",
+    "BSD-3-Clause",
+    "Proprietary"
+  ],
+  "debug": "yes",
+  "timezone": "Africa/Johannesburg"
+}
