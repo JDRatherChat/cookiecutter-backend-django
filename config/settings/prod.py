@@ -5,12 +5,12 @@ Production-specific settings.
 """
 
 from .base import *
-from .restframework import *
 from .logging import *
+from .restframework import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['yourdomain.com'])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["yourdomain.com"])
 
 # Security settings
 SECURE_BROWSER_XSS_FILTER = True

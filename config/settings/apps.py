@@ -8,19 +8,19 @@ Define and organize Django apps into groups:
 """
 
 DJANGO_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
 THIRD_PARTY_APPS = [
-    'rest_framework',
+    "rest_framework",
 ]
 
 LOCAL_APPS = [
-    'apps.custom_user',
-    'apps.dashboard',
+    "apps.custom_user",
+    "apps.dashboard",
 ]
