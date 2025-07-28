@@ -2,6 +2,7 @@
   <dictionary name="project">
     <words>
       <w>gresse</w>
+      <w>makemigrations</w>
     </words>
   </dictionary>
 </component>

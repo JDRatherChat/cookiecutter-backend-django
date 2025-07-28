@@ -1,1 +1,7 @@
 -r base.in
+
+# Production-grade server
+gunicorn
+
+# Optional: whitenoise for static file serving if not using a CDN
+whitenoise
