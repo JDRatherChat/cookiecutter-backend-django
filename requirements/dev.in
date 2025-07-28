@@ -11,3 +11,8 @@ flake8
 isort
 pre-commit
 mypy
+django-stubs
+
+# Testing
+pytest
+pytest-django

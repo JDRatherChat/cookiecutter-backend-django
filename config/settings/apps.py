@@ -23,4 +23,5 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "apps.custom_user",
     "apps.dashboard",
+    "apps.core",
 ]

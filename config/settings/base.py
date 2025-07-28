@@ -73,7 +73,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "{{ cookiecutter.timezone }}"
+TIME_ZONE = os.getenv("TIME_ZONE", "Africa/Johannesburg")
 USE_I18N = True
 USE_TZ = True
 

@@ -4,6 +4,8 @@ SHELL := /bin/bash
 # Default environment
 ENV ?= dev
 
+.PHONY: runserver makemigrations migrate shell requirements sync setup format lint type test merge tag push commit
+
 # Run Django development server
 runserver:
 	@echo "Starting Django runserver..."
@@ -24,17 +26,6 @@ shell:
 	@echo "Opening Django shell_plus..."
 	python manage.py shell_plus
 
-# Code quality checks
-lint:
-	@echo "Running code quality checks..."
-	pre-commit run --all-files
-
-# Auto-format code
-format:
-	@echo "Auto-formatting code..."
-	black .
-	isort .
-
 # Compile requirements using pip-tools
 requirements:
 	@echo "Compiling requirements..."
@@ -50,19 +41,16 @@ sync:
 setup:
 	@echo "Setting up development environment..."
 	python -m venv .venv
-	source .venv/bin/activate && pip install --upgrade pip
-	source .venv/bin/activate && pip install pip-tools pre-commit
+	.venv/Scripts/python -m pip install --upgrade pip
+	.venv/Scripts/python -m pip install pip-tools pre-commit
 	make requirements ENV=$(ENV)
 	make sync ENV=$(ENV)
 	pre-commit install
-	@echo "Setup complete! Activate your venv with: source .venv/bin/activate"
-
+	@echo "Setup complete! Activate your venv with: .venv/Scripts/activate"
 
 # ============================================
-# Extra Developer Commands (v0.0.4)
+# Developer Commands (v0.0.4)
 # ============================================
-
-.PHONY: format lint type test merge tag push
 
 # Format code using Black and isort
 format:
@@ -84,6 +72,16 @@ type:
 test:
 	.venv/Scripts/python -m pytest
 	@echo "✅ Tests complete."
+
+# Create a commit (usage: make commit m="Your message")
+commit:
+	@if [ -z "$(m)" ]; then \
+		echo "❌ Please specify a commit message: make commit m='Your message'"; \
+		exit 1; \
+	fi
+	@git add -A
+	@git commit -m "$(m)"
+	@echo "✅ Commit created with message: $(m)"
 
 # Merge current feature branch into master with rebase
 merge:
