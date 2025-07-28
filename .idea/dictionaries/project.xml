@@ -3,6 +3,8 @@
     <words>
       <w>gresse</w>
       <w>makemigrations</w>
+      <w>nosniff</w>
+      <w>restframework</w>
     </words>
   </dictionary>
 </component>
