@@ -3,6 +3,7 @@
 # Debugging tools
 ipython
 django-debug-toolbar
+django-extensions
 
 # Code quality and pre-commit hooks
 black

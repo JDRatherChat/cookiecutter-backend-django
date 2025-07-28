@@ -1,9 +1,11 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>asgi</w>
       <w>gresse</w>
       <w>makemigrations</w>
       <w>nosniff</w>
+      <w>pythonpath</w>
       <w>restframework</w>
     </words>
   </dictionary>
