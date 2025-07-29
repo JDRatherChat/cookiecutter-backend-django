@@ -1,4 +1,4 @@
-name: Tests
+name: Test Suite
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-suite:
     runs-on: ubuntu-latest
 
     services:
@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python {{ cookiecutter.python_version }}
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '{{ cookiecutter.python_version }}'
@@ -55,9 +55,7 @@ jobs:
           echo "DATABASE_URL=sqlite:///db.sqlite3" >> $GITHUB_ENV
 
       - name: Run migrations
-        run: |
-          python manage.py migrate
+        run: python manage.py migrate
 
-      - name: Run tests
-        run: |
-          pytest
+      - name: Run tests with coverage
+        run: pytest --cov=apps --cov-report=term-missing --cov-report=xml

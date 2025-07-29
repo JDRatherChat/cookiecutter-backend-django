@@ -2,7 +2,7 @@
 
 ## Version
 
-- Current: **0.0.1** (2025-07-28)
+- Current: **0.1.0** (2025-07-29)
 
 ## Primary Goals
 
@@ -14,11 +14,13 @@
 
 ## Included Features
 
-- Modular `settings/` (base, dev, prod, test, restframework, logging)
-- GitHub Actions: linting + tests (with optional Postgres service)
-- Makefile: setup, runserver, migrations, lint, format, requirements
+- Modular `settings/` (base, dev, prod, restframework, logging)
+- GitHub Actions: linting + tests + release pipeline
+- Makefile: setup, install, runserver, migrations, format, lint, test, test-fast, commit, ship
 - Pre-commit hooks: black, isort, flake8, YAML and whitespace checks
-- Example apps (`custom_user`, `dashboard`)
+- Example apps:
+  - `core`: template + DRF healthcheck views
+  - `custom_user`: email-based authentication + JWT
 - SQLite by default, Postgres optional
 
 ## Updating Pre-commit Hooks
@@ -28,3 +30,4 @@ If pre-commit fails due to outdated hook versions:
 ```bash
 pre-commit autoupdate
 pre-commit install
+````

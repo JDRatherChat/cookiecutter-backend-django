@@ -1,107 +1,104 @@
-# Use bash for better compatibility
 SHELL := /bin/bash
 
 # Default environment
 ENV ?= dev
+PYTHON := .venv/bin/python
 
-.PHONY: runserver makemigrations migrate shell requirements sync setup format lint type test merge tag push commit
+.PHONY: runserver makemigrations migrate shell setup install deps format lint test test-fast commit ship secret
 
 # Run Django development server
 runserver:
-	@echo "Starting Django runserver..."
-	python manage.py runserver
+	@echo "🚀 Starting Django runserver..."
+	$(PYTHON) manage.py runserver
 
-# Create new migrations
 makemigrations:
-	@echo "Creating new migrations..."
-	python manage.py makemigrations
+	@echo "📝 Creating new migrations..."
+	$(PYTHON) manage.py makemigrations
 
-# Apply migrations
 migrate:
-	@echo "Running database migrations..."
-	python manage.py migrate
+	@echo "📦 Running database migrations..."
+	$(PYTHON) manage.py migrate
 
-# Open Django shell_plus
 shell:
-	@echo "Opening Django shell_plus..."
-	python manage.py shell_plus
+	@echo "🐚 Opening Django shell..."
+	$(PYTHON) manage.py shell_plus
 
-# Compile requirements using pip-tools
-requirements:
-	@echo "Compiling requirements..."
+# Setup project (new venv)
+setup:
+	@echo "⚙️ Setting up project..."
+	python -m venv .venv
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install pip-tools pre-commit commitizen
+	make install
+	pre-commit install
+	@echo "✅ Setup complete! Activate with: source .venv/bin/activate"
+
+# Install dependencies only
+install:
+	@echo "📚 Installing dependencies..."
 	pip-compile requirements/base.in
 	pip-compile requirements/$(ENV).in
-
-# Sync environment to compiled requirements
-sync:
-	@echo "Syncing dependencies..."
 	pip-sync requirements/$(ENV).txt
+	@echo "✅ Dependencies installed."
 
-# Full setup: venv, requirements, pre-commit
-setup:
-	@echo "Setting up development environment..."
-	python -m venv .venv
-	.venv/Scripts/python -m pip install --upgrade pip
-	.venv/Scripts/python -m pip install pip-tools pre-commit
-	make requirements ENV=$(ENV)
-	make sync ENV=$(ENV)
-	pre-commit install
-	@echo "Setup complete! Activate your venv with: .venv/Scripts/activate"
+# Generate a new Django SECRET_KEY and append it to the env file
+secret:
+	@if [ -z "$(envfile)" ]; then \
+		echo "❌ Please specify envfile: make secret envfile=environments/.dev"; \
+		exit 1; \
+	fi
+	@echo "🔑 Generating Django SECRET_KEY..."
+	SECRET_KEY=$$($(PYTHON) -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"); \
+	if grep -q '^SECRET_KEY=' $(envfile); then \
+		sed -i'' -e "s/^SECRET_KEY=.*/SECRET_KEY=$$SECRET_KEY/" $(envfile); \
+	else \
+		echo "SECRET_KEY=$$SECRET_KEY" >> $(envfile); \
+	fi
+	@echo "✅ SECRET_KEY updated in $(envfile)"
 
-# ============================================
-# Developer Commands (v0.0.4)
-# ============================================
-
-# Format code using Black and isort
+# Format code
 format:
-	.venv/Scripts/python -m black .
-	.venv/Scripts/python -m isort .
-	@echo "✅ Code formatted."
+	@echo "🖌️ Formatting code..."
+	$(PYTHON) -m black apps config manage.py
+	$(PYTHON) -m isort apps config manage.py
+	@echo "✅ Formatting complete."
 
-# Lint using Flake8
+# Lint code
 lint:
-	.venv/Scripts/python -m flake8 .
-	@echo "✅ Lint check complete."
+	@echo "🔍 Linting code..."
+	$(PYTHON) -m flake8
+	@echo "✅ Linting complete."
 
-# Type checking using mypy
-type:
-	.venv/Scripts/python -m mypy .
-	@echo "✅ Type check complete."
-
-# Run tests using pytest
+# Run tests with coverage
 test:
-	.venv/Scripts/python -m pytest
+	@echo "🧪 Running tests with coverage..."
+	$(PYTHON) -m pytest --cov=apps --cov-report=term-missing
 	@echo "✅ Tests complete."
 
-# Create a commit (usage: make commit m="Your message")
+# Run fast tests without coverage
+test-fast:
+	@echo "⚡ Running fast tests..."
+	$(PYTHON) -m pytest
+	@echo "✅ Fast tests complete."
+
+# Commit with quality checks
 commit:
 	@if [ -z "$(m)" ]; then \
 		echo "❌ Please specify a commit message: make commit m='Your message'"; \
 		exit 1; \
 	fi
+	@echo "✨ Running checks before commit..."
+	make format
+	make lint
+	make test-fast
+	@pre-commit run --all-files || (echo "❌ Pre-commit fixed files. Please re-stage and run make commit again." && exit 1)
 	@git add -A
 	@git commit -m "$(m)"
 	@echo "✅ Commit created with message: $(m)"
 
-# Merge current feature branch into master with rebase
-merge:
-	@git checkout master
-	@git pull origin master --rebase
-	@git merge $$(git symbolic-ref --short HEAD@{1}) --ff-only
-	@echo "✅ Branch merged into master with rebase."
-
-# Create a new version tag (usage: make tag v=0.0.4)
-tag:
-	@if [ -z "$(v)" ]; then \
-		echo "❌ Please specify a version: make tag v=0.0.4"; \
-		exit 1; \
-	fi
-	@git tag v$(v)
-	@git push origin v$(v)
-	@echo "✅ Tagged version v$(v)."
-
-# Push latest master and all tags
-push:
-	@git push origin master
-	@git push origin --tags
-	@echo "✅ Master and tags pushed to remote."
+# Ship versioned release
+ship:
+	@echo "🏷️ Shipping release..."
+	cz bump --changelog
+	git push --follow-tags
+	@echo "✅ Release"

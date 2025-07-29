@@ -3,5 +3,8 @@
 # Production-grade server
 gunicorn
 
-# Optional: whitenoise for static file serving if not using a CDN
+# Static file serving (if not using CDN)
 whitenoise
+
+# Database driver for production
+psycopg2
