@@ -14,7 +14,7 @@ env/
 # Environment files
 .env
 .envrc
-Environments/*.env
+environments/*.env
 
 # SQLite database (used for dev/testing)
 *.sqlite3
@@ -41,11 +41,15 @@ coverage.xml
 *.pot
 *.pyc
 db.sqlite3
-media/
 
-# Staticfiles collected for production
+# Media files (keep folder but not content)
+media/*
+!media/.gitkeep
+
+# Static files (keep folder but not content)
 staticfiles/
-static/
+static/*
+!static/.gitkeep
 
 # Sphinx documentation
 docs/_build/

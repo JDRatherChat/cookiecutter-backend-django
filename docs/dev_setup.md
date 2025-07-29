@@ -8,26 +8,51 @@ This guide explains how to configure your environment for the Cookiecutter Djang
 - On Windows, executables are in `.venv/Scripts/`.
 - On macOS/Linux, they are in `.venv/bin/`.
 
+## First Run Setup
+
+1. Install dependencies:
+   ```bash
+   make setup
+
+````
+
+2. Generate a secret key and add to your environment file:
+
+   ```bash
+   make secret envfile=environments/dev.env
+   ```
+3. Create initial migrations:
+
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+4. Start the development server:
+
+   ```bash
+   make runserver
+   ```
+
 ## Code Style
 
-- Right margin: 88 characters
-- Wrap on typing enabled
-- Ensure right margin is not exceeded
-- 4-space indents
+* Right margin: 88 characters
+* 4-space indents
+* Tools:
 
-## Tools
-
-- **Black**: Formats code (`make format`)
-- **isort**: Sorts imports (`make format`)
-- **Flake8**: Linting (`make lint`)
-- **mypy**: Type checking (`make type`)
-- **pytest**: Testing (`make test`)
+    * **Black**: `make format`
+    * **isort**: `make format`
+    * **Flake8**: `make lint`
+    * **pytest**: `make test` / `make test-fast`
 
 ## Git Workflow
 
-- Merge feature branch into master: `make merge`
-- Tag a new version: `make tag v=0.0.4`
-- Push master + tags: `make push`
+* Commit with quality checks:
 
-⚠️ **Windows Developers**: The included Makefile uses `.venv/Scripts/`.
-Change to `.venv/bin/` if running on macOS/Linux.
+  ```bash
+  make commit m="Your message"
+  ```
+* Release new version:
+
+  ```bash
+  make ship
+  ```

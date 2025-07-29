@@ -10,9 +10,14 @@ black
 flake8
 isort
 pre-commit
-mypy
-django-stubs
 
 # Testing
 pytest
 pytest-django
+pytest-cov
+
+# Authentication (optional — move to base.in if always used)
+djangorestframework-simplejwt
+
+# Changelog generation
+commitizen

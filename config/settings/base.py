@@ -9,6 +9,8 @@ from pathlib import Path
 
 import environ
 
+from apps import custom_user
+
 from .apps import DJANGO_APPS, LOCAL_APPS, THIRD_PARTY_APPS
 
 # Directories
@@ -83,3 +85,5 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "custom_user.CustomUser"

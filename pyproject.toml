@@ -1,0 +1,18 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = ["migrations", ".venv", "venv", ".idea", "__pycache__"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.6"
+tag_format = "v$version"
+version_files = [
+    "CHANGELOG.md",
+    "docs/context.md",
+    "cookiecutter.json"
+]
